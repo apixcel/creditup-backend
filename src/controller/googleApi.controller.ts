@@ -12,7 +12,7 @@ export const readSheetController = catchAsyncError(async (req, res) => {
     spreadsheetId,
     range: "Sheet1",
   });
-  res.json(getSheetData);
+  res.status(200).json({ data: getSheetData });
 });
 export const appendDataInSheetController = catchAsyncError(async (req, res) => {
   const googleSheet = await connectGoogleSheet();
@@ -20,7 +20,7 @@ export const appendDataInSheetController = catchAsyncError(async (req, res) => {
 
   const { data } = req.body;
 
-  const response = await googleSheet.spreadsheets.values.append({
+  const response = googleSheet.spreadsheets.values.append({
     auth,
     spreadsheetId,
     range: `Sheet1!A3:B`,
@@ -48,7 +48,7 @@ export const deleteRowFromSheetController = catchAsyncError(
             range: {
               sheetId: 0,
               dimension: "ROWS",
-              startIndex: rowIndex - 1, 
+              startIndex: rowIndex - 1,
               endIndex: rowIndex,
             },
           },
