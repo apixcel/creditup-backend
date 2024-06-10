@@ -1,6 +1,7 @@
 import express from "express";
 import { authRoutes } from "./auth.route";
 import { googleApiRoutes } from "./googleApi.route";
+import customerApiRoutes from "./customer.route";
 const router = express.Router();
 
 const moduleRoute = [
@@ -11,6 +12,10 @@ const moduleRoute = [
   {
     path: "/sheet",
     route: googleApiRoutes,
+  },
+  {
+    path: "/customer",
+    route: customerApiRoutes,
   },
 ];
 
