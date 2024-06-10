@@ -36,11 +36,15 @@ export const registerController = catchAsyncError(async (req, res, next) => {
     emailOrNumber: body.emailOrNumber,
   });
   const { password, ...user } = result.toObject();
-  sendResponse(res, {
+
+  const token = createToken(user, "7d");
+
+  res.status(200).json({
     data: user,
     message: "User creaeted successfully",
     statusCode: 200,
     success: true,
+    token,
   });
 });
 export const loginController = catchAsyncError(async (req, res, next) => {
@@ -69,7 +73,7 @@ export const loginController = catchAsyncError(async (req, res, next) => {
 
   const token = createToken(restUser, "7d");
 
-  sendResponse(res, {
+  res.status(200).json({
     data: restUser,
     message: "Successfully loged in",
     statusCode: 200,
