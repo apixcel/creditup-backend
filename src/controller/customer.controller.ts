@@ -8,36 +8,32 @@ import { catchAsyncError } from "../utils/catchAsyncError";
 import sendResponse from "../utils/sendResponse";
 import { findCustomerByEmailOrNumber } from "../utils/user";
 
-export const updateCustomer = async (req: Request, res: Response) => {
-  const { data } = req.body;
+export const updateCustomer = catchAsyncError(
+  async (req: Request, res: Response) => {
+    const { data } = req.body;
 
-  const email = "sakibsarkar707@gmail.com";
-  const isExist = await Customer.findOne({ emailOrNumber: email });
+    const user = req.user;
 
-  if (!isExist) {
-    return sendResponse(res, {
-      data: null,
-      message: "User not found!",
-      statusCode: 404,
-      success: false,
+    if (!user) {
+      throw new AppError(400, "Uncought user not found");
+    }
+    const emailOrNumber = user.emailOrNumber;
+
+    const isExist = await findCustomerByEmailOrNumber(emailOrNumber);
+
+    if (!isExist) {
+      return sendResponse(res, {
+        data: null,
+        message: "User doesn't exist!",
+        statusCode: 404,
+        success: false,
+      });
+    }
+
+    const updateCustomer = await Customer.findByIdAndUpdate(isExist._id, data, {
+      new: true,
+      runValidators: true,
     });
-  }
-
-  if (!data) {
-    return res.status(404).json({
-      message: "You must add data",
-    });
-  }
-
-  try {
-    const updateCustomer = await Customer.findByIdAndUpdate(
-      isExist._id,
-      req.body,
-      {
-        new: true,
-        runValidators: true,
-      }
-    );
 
     if (!updateCustomer) {
       return res.status(404).json({
@@ -45,47 +41,41 @@ export const updateCustomer = async (req: Request, res: Response) => {
       });
     }
 
-    res.status(204).json({
-      message: "Customer successfully updated!",
-      customer: updateCustomer,
-    });
-  } catch (error: any) {
-    res.status(400).json({
-      message: error.message,
+    sendResponse(res, {
+      message: "successfully updated customer",
+      data: updateCustomer,
+      success: true,
     });
   }
-};
+);
 
-export const updateCustomerAddressController = async (
-  req: Request,
-  res: Response
-) => {
-  const { data } = req.body;
-  const user = req.user;
+export const updateCustomerAddressController = catchAsyncError(
+  async (req: Request, res: Response) => {
+    const { data } = req.body;
+    const user = req.user;
 
-  if (!user) {
-    throw new AppError(400, "Uncought user not found");
-  }
-  const emailOrNumber = user.emailOrNumber;
+    if (!user) {
+      throw new AppError(400, "Uncought user not found");
+    }
+    const emailOrNumber = user.emailOrNumber;
 
-  const isExist = await findCustomerByEmailOrNumber(emailOrNumber);
+    const isExist = await findCustomerByEmailOrNumber(emailOrNumber);
 
-  if (!isExist) {
-    return sendResponse(res, {
-      data: null,
-      message: "User doesn't exist!",
-      statusCode: 404,
-      success: false,
-    });
-  }
+    if (!isExist) {
+      return sendResponse(res, {
+        data: null,
+        message: "User doesn't exist!",
+        statusCode: 404,
+        success: false,
+      });
+    }
 
-  if (!data) {
-    return res.status(404).json({
-      message: "You must add data",
-    });
-  }
+    if (!data) {
+      return res.status(404).json({
+        message: "You must add data",
+      });
+    }
 
-  try {
     const updateCustomerAddress = await CustomerAddress.findByIdAndUpdate(
       isExist._id,
       req.body,
@@ -101,16 +91,13 @@ export const updateCustomerAddressController = async (
       });
     }
 
-    res.status(204).json({
+    sendResponse(res, {
       message: "Customer successfully updated!",
-      customerAddress: updateCustomerAddress,
-    });
-  } catch (error: any) {
-    res.status(400).json({
-      message: error.message,
+      data: updateCustomerAddress,
+      success: true,
     });
   }
-};
+);
 export const updateCustomerCreditUpController = catchAsyncError(
   async (req, res) => {
     const body = req.body;

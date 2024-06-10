@@ -10,7 +10,7 @@ import { validSchema } from "../middlewares/validShema";
 import { customerCreditupValidationSchema } from "../validation/customerValidationSchema";
 const router = express.Router();
 
-router.patch("/update", updateCustomer);
+router.patch("/update", isAuthenticatedUser, updateCustomer);
 router.patch(
   "/update/credit",
   validSchema(customerCreditupValidationSchema),
