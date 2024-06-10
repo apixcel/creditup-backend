@@ -19,15 +19,12 @@ export const isAuthenticatedUser = async (
     if (!decoded)
       return res.status(400).json({ msg: "Invalid Authentication." });
 
-    const user = await User.findOne({ _id: decoded?.user?._id }).select(
-      "-password"
-    );
+    const user = await User.findOne({ _id: decoded?.user?._id });
     if (!user) return res.status(400).json({ msg: "User does not exist." });
 
     req.user = user;
 
     next();
-    
   } catch (err: any) {
     return res.status(500).json({ msg: err.message });
   }
