@@ -1,7 +1,7 @@
 import express from "express";
 import { authRoutes } from "./auth.route";
+import customer from "./customer.route";
 import { googleApiRoutes } from "./googleApi.route";
-import customerApiRoutes from "./customer.route";
 const router = express.Router();
 
 const moduleRoute = [
@@ -15,7 +15,7 @@ const moduleRoute = [
   },
   {
     path: "/customer",
-    route: customerApiRoutes,
+    route: customer,
   },
 ];
 
