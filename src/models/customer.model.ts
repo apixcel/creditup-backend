@@ -8,7 +8,7 @@ const CustomerSchema = new Schema({
   phone: { type: String },
   address: { type: String },
   postCode: { type: String },
-  customerDetail: {
+  customerDetails: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "CustomerDetails",
   },
