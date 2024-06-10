@@ -3,17 +3,41 @@ const Schema = mongoose.Schema;
 
 // CustomerAddress Schema
 const CustomerAddressSchema = new Schema({
-  customerId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Customer",
+  postCode: {
+    type: String,
+    required: false,
+    default: "",
   },
-  postCode: { type: String },
-  buildingNumber: { type: String },
-  subBuildingName: { type: String },
-  buildingName: { type: String },
-  streetName: { type: String },
-  city: { type: String },
-  country: { type: String },
+  buildingNumber: {
+    type: String,
+    required: false,
+    default: "",
+  },
+  subBuildingName: {
+    type: String,
+    required: false,
+    default: "",
+  },
+  buildingName: {
+    type: String,
+    required: false,
+    default: "",
+  },
+  streetName: {
+    type: String,
+    required: false,
+    default: "",
+  },
+  city: {
+    type: String,
+    required: false,
+    default: "",
+  },
+  country: {
+    type: String,
+    required: false,
+    default: "",
+  },
 });
 
 const CustomerAddress = mongoose.model(

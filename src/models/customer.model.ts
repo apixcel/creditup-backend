@@ -1,13 +1,31 @@
-import mongoose from "mongoose";
-const Schema = mongoose.Schema;
+import mongoose, { Schema } from "mongoose";
 
 // Customer Schema
 const CustomerSchema = new Schema({
-  emailOrNumber: { type: String },
-  customerName: { type: String },
-  phone: { type: String },
-  address: { type: String },
-  postCode: { type: String },
+  emailOrNumber: {
+    type: String,
+    required: true,
+  },
+  customerName: {
+    type: String,
+    required: false,
+    default: "",
+  },
+  phone: {
+    type: String,
+    required: false,
+    default: "",
+  },
+  address: {
+    type: String,
+    required: false,
+    default: "",
+  },
+  postCode: {
+    type: String,
+    required: false,
+    default: "",
+  },
   customerDetail: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "CustomerDetails",
@@ -16,7 +34,14 @@ const CustomerSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "CustomerAddress",
   },
-  creditUp: { type: mongoose.Schema.Types.ObjectId, ref: "CreditUp" },
+  auth: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
+  creditUp: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "CreditUp",
+  },
 });
 
 const Customer = mongoose.model("Customer", CustomerSchema);

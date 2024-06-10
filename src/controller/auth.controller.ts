@@ -1,4 +1,8 @@
 import bcrypt from "bcrypt";
+import Customer from "../models/customer.model";
+import CustomerAddress from "../models/customerAddress.model";
+import CreditUp from "../models/customerCreditUp.model";
+import CustomerDetails from "../models/customerDetails.model";
 import { User } from "../models/userModel";
 import { catchAsyncError } from "../utils/catchAsyncError";
 import createToken from "../utils/jwtToken";
@@ -16,6 +20,21 @@ export const registerController = catchAsyncError(async (req, res, next) => {
     });
   }
   const result = await User.create(body);
+  const customerAdress = await CustomerAddress.create({});
+  const customerCredit = await CreditUp.create({});
+  const customerDetails = await CustomerDetails.create({});
+
+  const customerObj = {
+    customerAddress: customerAdress._id,
+    auth: result._id,
+    creditUp: customerCredit._id,
+    customerDetail: customerDetails._id,
+  };
+
+  const customer = await Customer.create({
+    ...customerObj,
+    emailOrNumber: body.emailOrNumber,
+  });
   const { password, ...user } = result.toObject();
   sendResponse(res, {
     data: user,
