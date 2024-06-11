@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  checkIsExist,
   loginController,
   passwordResetController,
 } from "../controller/auth.controller";
@@ -9,7 +10,7 @@ import {
   userValidationSchema,
 } from "../validation/userVlidationSchema";
 const router = Router();
-// router.post("/register", validSchema(userValidationSchema), registerController);
+router.post("/isexist", checkIsExist);
 router.post("/login", validSchema(userValidationSchema), loginController);
 router.post(
   "/reset-password",

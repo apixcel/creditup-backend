@@ -7,7 +7,21 @@ import { bcryptSalRound, findUserByEmailOrNumber } from "../utils/user";
 
 export const checkIsExist = catchAsyncError(async (req, res) => {
   const { emailOrNumber } = req.body;
-  // const
+  const isExist = await findUserByEmailOrNumber(emailOrNumber);
+  if (isExist) {
+    return res.json({
+      success: false,
+      message: "User already exist in this email or number",
+      data: null,
+      duplicate: true,
+    });
+  }
+  res.json({
+    success: true,
+    message: "ok :)",
+    data: null,
+    duplicate: false,
+  });
 });
 
 export const loginController = catchAsyncError(async (req, res, next) => {
@@ -56,7 +70,6 @@ export const passwordResetController = catchAsyncError(
         success: false,
       });
     }
-    console.log(user.password);
 
     const isPasswordMathced = await bcrypt.compare(oldPassword, user.password);
 

@@ -2,7 +2,6 @@ import { sheets_v4 } from "googleapis";
 import { auth } from "../app";
 import { catchAsyncError } from "../utils/catchAsyncError";
 import { connectGoogleSheet } from "../utils/connectGoogleSheet";
-import { sheetHeading } from "../utils/sheetHeadings";
 
 export const readSheetController = catchAsyncError(async (req, res) => {
   const googleSheet = await connectGoogleSheet();
@@ -14,26 +13,6 @@ export const readSheetController = catchAsyncError(async (req, res) => {
     range: "Sheet1",
   });
   res.status(200).json({ data: getSheetData });
-});
-export const appendDataInSheetController = catchAsyncError(async (req, res) => {
-  const googleSheet = await connectGoogleSheet();
-  const spreadsheetId = "1NkczMUsM3Su-AmpQpRWb6QpConYxHxhVndvbnhmTwf8";
-
-  // const { data } = req.body;
-  const body = req.body;
-  const data = sheetHeading.map((head) => body[head] || "UNKNOWN");
-
-  const response = googleSheet.spreadsheets.values.append({
-    auth,
-    spreadsheetId,
-    range: `Sheet1!A3:B`,
-    valueInputOption: "USER_ENTERED",
-    resource: {
-      values: [data],
-    },
-  });
-
-  res.send(response);
 });
 
 export const deleteRowFromSheetController = catchAsyncError(

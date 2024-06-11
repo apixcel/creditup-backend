@@ -6,6 +6,7 @@ import CustomerAddress from "../models/customerAddress.model";
 import CreditUp from "../models/customerCreditUp.model";
 import CustomerDetails from "../models/customerDetails.model";
 import { User } from "../models/userModel";
+import { appendDataInSheetController } from "../services/googApi.service";
 import { catchAsyncError } from "../utils/catchAsyncError";
 import createToken from "../utils/jwtToken";
 import sendResponse from "../utils/sendResponse";
@@ -36,7 +37,6 @@ export const confirmPaymentController = async (
   next: NextFunction
 ) => {
   const body = req.body;
-  console.log(body);
 
   const isExist = await findUserByEmailOrNumber(body.emailOrNumber);
   if (isExist) {
@@ -70,6 +70,9 @@ export const confirmPaymentController = async (
     const { password, ...user } = result[0].toObject();
 
     const token = createToken(user, "7d");
+
+    // add data in sheet
+    appendDataInSheetController(req.body);
 
     await session.commitTransaction();
     session.endSession();

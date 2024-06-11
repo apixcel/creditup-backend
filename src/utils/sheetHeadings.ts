@@ -23,5 +23,5 @@ export const sheetHeading = [
   "lender",
   "outstandingBalance",
   "contribute",
-  "anotherLander",
+  "anotherLender",
 ];
