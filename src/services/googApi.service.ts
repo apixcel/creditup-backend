@@ -9,7 +9,13 @@ export const appendDataInSheetController = async (
 
   // const { data } = req.body;
 
-  const data = sheetHeading.map((head) => sheetData[head] || "UNKNOWN");
+  const data = sheetHeading.map((head) => {
+    const value = sheetData[head];
+    if (!value && value !== 0) {
+      return "UNKOWN";
+    }
+    return value;
+  });
 
   const res = googleSheet.spreadsheets.values.append({
     auth,
