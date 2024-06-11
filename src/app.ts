@@ -3,11 +3,15 @@ import express from "express";
 import { google } from "googleapis";
 import http from "http";
 import morgan from "morgan";
+import Stripe from "stripe";
 import connectDB from "./config/db";
 import globalErrorHandler from "./middlewares/globalError";
 import { notFound } from "./middlewares/notFound";
 import routes from "./routes";
 const app = express();
+
+export const stripe = new Stripe(process.env.STRIPE_KEY as string);
+
 app.use(express.static("public"));
 app.use(cors({ origin: "*" }));
 app.use(morgan("dev"));
@@ -22,8 +26,6 @@ export const auth = new google.auth.GoogleAuth({
   keyFile: "credentials.json",
   scopes: "https://www.googleapis.com/auth/spreadsheets",
 });
-
-
 
 // Define API routes
 app.use("/api/v1", routes);
