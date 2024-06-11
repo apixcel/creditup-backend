@@ -2,6 +2,7 @@ import { sheets_v4 } from "googleapis";
 import { auth } from "../app";
 import { catchAsyncError } from "../utils/catchAsyncError";
 import { connectGoogleSheet } from "../utils/connectGoogleSheet";
+import { extractValues } from "../utils/extractValues";
 
 export const readSheetController = catchAsyncError(async (req, res) => {
   const googleSheet = await connectGoogleSheet();
@@ -14,23 +15,30 @@ export const readSheetController = catchAsyncError(async (req, res) => {
   });
   res.status(200).json({ data: getSheetData });
 });
+
 export const appendDataInSheetController = catchAsyncError(async (req, res) => {
   const googleSheet = await connectGoogleSheet();
   const spreadsheetId = "1NkczMUsM3Su-AmpQpRWb6QpConYxHxhVndvbnhmTwf8";
 
-  const { data } = req.body;
+  const data = req.body;
 
-  const response = googleSheet.spreadsheets.values.append({
-    auth,
-    spreadsheetId,
-    range: `Sheet1!A3:B`,
-    valueInputOption: "USER_ENTERED",
-    resource: {
-      values: [data],
-    },
-  });
+  console.log(data);
 
-  res.send(response);
+  const valueData = extractValues(data);
+
+  console.log(valueData);
+
+  // const response = googleSheet.spreadsheets.values.append({
+  //   auth,
+  //   spreadsheetId,
+  //   range: `Sheet1!A3:B`,
+  //   valueInputOption: "USER_ENTERED",
+  //   resource: {
+  //     values: [valueData],
+  //   },
+  // });
+
+  // res.send(response);
 });
 
 export const deleteRowFromSheetController = catchAsyncError(
