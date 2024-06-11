@@ -21,24 +21,22 @@ export const appendDataInSheetController = catchAsyncError(async (req, res) => {
   const spreadsheetId = "1NkczMUsM3Su-AmpQpRWb6QpConYxHxhVndvbnhmTwf8";
 
   const data = req.body;
-
-  console.log(data);
-
   const valueData = extractValues(data);
 
-  console.log(valueData);
+  googleSheet.spreadsheets.values.append({
+    auth,
+    spreadsheetId,
+    range: `Sheet1!A2:B`,
+    valueInputOption: "USER_ENTERED",
+    resource: {
+      values: [valueData],
+    },
+  });
 
-  // const response = googleSheet.spreadsheets.values.append({
-  //   auth,
-  //   spreadsheetId,
-  //   range: `Sheet1!A3:B`,
-  //   valueInputOption: "USER_ENTERED",
-  //   resource: {
-  //     values: [valueData],
-  //   },
-  // });
-
-  // res.send(response);
+  res.status(201).json({
+    success: true,
+    message: "You successfully added the data into the sheet!",
+  });
 });
 
 export const deleteRowFromSheetController = catchAsyncError(
