@@ -22,7 +22,7 @@ const CustomerSchema = new Schema({
     default: "",
   },
   postCode: {
-    type: String,
+    type: Number,
     required: false,
     default: "",
   },
@@ -45,5 +45,7 @@ const CustomerSchema = new Schema({
 });
 
 const Customer = mongoose.model("Customer", CustomerSchema);
+
+
 
 export default Customer;

@@ -9,17 +9,20 @@ const CreditUpSchema = new Schema({
     required: false,
   },
   outstandingBalance: {
-    type: Number,
+    // type: Number ,
+    type: Schema.Types.Mixed,
     default: 0,
     required: false,
   },
   contribute: {
-    type: Number,
+    // type: Number ,
+    type: Schema.Types.Mixed,
     default: 0,
     required: false,
   },
   anotherLander: {
-    type: Number,
+    // type: Number ,
+    type: Schema.Types.Mixed,
     default: 0,
     required: false,
   },

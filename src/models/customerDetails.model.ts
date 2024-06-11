@@ -11,7 +11,7 @@ const CustomerDetailSchema = new Schema({
   email: { type: String, unique: true, required: false, default: "" },
   status: { type: String, required: false, default: "" },
   total: { type: Number, required: false, default: "" },
-  paymentDate: { type: Date, required: false, default: "" },
+  paymentDate: { type: String, required: false, default: "" },
 });
 
 const CustomerDetails = mongoose.model("CustomerDetails", CustomerDetailSchema);

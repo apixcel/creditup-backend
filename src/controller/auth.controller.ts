@@ -1,52 +1,15 @@
 import bcrypt from "bcrypt";
-import Customer from "../models/customer.model";
-import CustomerAddress from "../models/customerAddress.model";
-import CreditUp from "../models/customerCreditUp.model";
-import CustomerDetails from "../models/customerDetails.model";
 import { User } from "../models/userModel";
 import { catchAsyncError } from "../utils/catchAsyncError";
 import createToken from "../utils/jwtToken";
 import sendResponse from "../utils/sendResponse";
 import { bcryptSalRound, findUserByEmailOrNumber } from "../utils/user";
-export const registerController = catchAsyncError(async (req, res, next) => {
-  const { body } = req;
-  const isExist = await findUserByEmailOrNumber(body.emailOrNumber);
-  if (isExist) {
-    return sendResponse(res, {
-      data: null,
-      message: "User already exist in this email or number",
-      statusCode: 400,
-      success: false,
-    });
-  }
-  const result = await User.create(body);
-  const customerAdress = await CustomerAddress.create({});
-  const customerCredit = await CreditUp.create({});
-  const customerDetails = await CustomerDetails.create({});
 
-  const customerObj = {
-    customerAddress: customerAdress._id,
-    auth: result._id,
-    creditUp: customerCredit._id,
-    customerDetail: customerDetails._id,
-  };
-
-  const customer = await Customer.create({
-    ...customerObj,
-    emailOrNumber: body.emailOrNumber,
-  });
-  const { password, ...user } = result.toObject();
-
-  const token = createToken(user, "7d");
-
-  res.status(200).json({
-    data: user,
-    message: "User creaeted successfully",
-    statusCode: 200,
-    success: true,
-    token,
-  });
+export const checkIsExist = catchAsyncError(async (req, res) => {
+  const { emailOrNumber } = req.body;
+  // const
 });
+
 export const loginController = catchAsyncError(async (req, res, next) => {
   const { emailOrNumber, password } = req.body;
   const user = await findUserByEmailOrNumber(emailOrNumber);

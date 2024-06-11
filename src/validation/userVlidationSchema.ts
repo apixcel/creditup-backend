@@ -11,7 +11,7 @@ export const userValidationSchema = z.object({
     .regex(/[a-z]/, {
       message: "Password must contain at least one lowercase letter",
     }),
-  userType: z.enum(["guest", "customer"]).optional().default("guest"),
+  userType: z.enum(["agent", "customer"]).optional().default("customer"),
 });
 
 export const userPasswordValidatoinResetSchema = z.object({

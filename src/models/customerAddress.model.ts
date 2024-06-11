@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 // CustomerAddress Schema
 const CustomerAddressSchema = new Schema({
   postCode: {
-    type: String,
+    type: Number,
     required: false,
     default: "",
   },
