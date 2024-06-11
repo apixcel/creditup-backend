@@ -8,7 +8,7 @@ const CustomerDetailSchema = new Schema({
   firstName: { type: String, required: false, default: "" },
   lastName: { type: String, required: false, default: "" },
   dateOfBirth: { type: Date },
-  email: { type: String, unique: true, required: false, default: "" },
+  email: { type: String, required: false, default: "" },
   status: { type: String, required: false, default: "" },
   total: { type: Number, required: false, default: "" },
   paymentDate: { type: Date, required: false, default: "" },

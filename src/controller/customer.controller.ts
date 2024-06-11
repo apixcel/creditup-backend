@@ -10,8 +10,9 @@ import { findCustomerByEmailOrNumber } from "../utils/user";
 
 export const updateCustomer = catchAsyncError(
   async (req: Request, res: Response) => {
-    const { data } = req.body;
+    const data = req.body;
 
+    console.log(data);
     const user = req.user;
 
     if (!user) {

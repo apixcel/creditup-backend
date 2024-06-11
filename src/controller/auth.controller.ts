@@ -8,6 +8,7 @@ import { catchAsyncError } from "../utils/catchAsyncError";
 import createToken from "../utils/jwtToken";
 import sendResponse from "../utils/sendResponse";
 import { bcryptSalRound, findUserByEmailOrNumber } from "../utils/user";
+
 export const registerController = catchAsyncError(async (req, res, next) => {
   const { body } = req;
   const isExist = await findUserByEmailOrNumber(body.emailOrNumber);
