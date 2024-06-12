@@ -3,11 +3,6 @@ const Schema = mongoose.Schema;
 
 // CustomerAddress Schema
 const CustomerAddressSchema = new Schema({
-  postCode: {
-    type: Number,
-    required: false,
-    default: "",
-  },
   buildingNumber: {
     type: String,
     required: false,
