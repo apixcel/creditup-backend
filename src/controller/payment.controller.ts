@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
 import { stripe } from "../app";
+import Circumstances from "../models/circumstance.model";
 import Customer from "../models/customer.model";
 import CustomerAddress from "../models/customerAddress.model";
 import CreditUp from "../models/customerCreditUp.model";
@@ -54,14 +55,17 @@ export const confirmPaymentController = async (
   try {
     const result = await User.create([body], { session });
     const customerAddress = await CustomerAddress.create([body], { session });
-    const customerCredit = await CreditUp.create([body], { session });
+    const newCreditUp = new CreditUp(body.creditUp);
+    const creditUP = await newCreditUp.save({ session });
     const customerDetails = await CustomerDetails.create([body], { session });
+    const circumstances = await Circumstances.create([body], { session });
 
     const customerObj = {
       customerAddress: customerAddress[0]._id,
       auth: result[0]._id,
-      creditUp: customerCredit[0]._id,
+      creditUp: creditUP._id,
       customerDetail: customerDetails[0]._id,
+      circumstances: circumstances[0]._id,
     };
 
     const customer = await Customer.create([{ ...customerObj, ...body }], {
@@ -71,8 +75,32 @@ export const confirmPaymentController = async (
 
     const token = createToken(user, "7d");
 
+    const { creditUp, ...rest } = req.body;
+
+    const sheetArr: Record<string, unknown> = { ...rest };
+
+    // [
+    //   {
+    //     "lender": "Bank of Example",
+    //     "outstandingBalance": 15000.50,
+    //     "contribute": 300.75
+    //   },
+    //   {
+    //     "lender": "Example Credit Union",
+    //     "outstandingBalance": 8200.00,
+    //     "contribute": 150.00
+    //   }
+    // ]
+    creditUp.forEach((data: any) => {
+      sheetArr.lender = `${sheetArr.lender || ""}, ${data.lender}`;
+      sheetArr.outstandingBalance = `${sheetArr.outstandingBalance || ""}, ${
+        data.outstandingBalance
+      }`;
+      sheetArr.contribute = `${sheetArr.contribute || ""}, ${data.contribute}`;
+    });
+
     // add data in sheet
-    appendDataInSheetController(req.body);
+    appendDataInSheetController(sheetArr);
 
     await session.commitTransaction();
     session.endSession();

@@ -23,5 +23,10 @@ export const sheetHeading = [
   "lender",
   "outstandingBalance",
   "contribute",
-  "anotherLender",
+  "totalDebtLevel",
+  "curCreditorRepayment",
+  "totalLender",
+  "newCreditorRepayment",
+  "monthlySaving",
+  "yearlySaving",
 ];

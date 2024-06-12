@@ -38,14 +38,16 @@ const CustomerSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
-  creditUp: {
+  // creditUp: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: "CreditUp",
+  // },
+  circumstances: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "CreditUp",
+    ref: "Circumstance",
   },
 });
 
 const Customer = mongoose.model("Customer", CustomerSchema);
-
-
 
 export default Customer;

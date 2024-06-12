@@ -25,6 +25,6 @@ const CreditUpSchema = new Schema({
   credits: [CreditEntrySchema],
 });
 
-const CreditUp = mongoose.model("CreditUp", CreditUpSchema);
+const CreditUp = mongoose.model("CreditUp", CreditEntrySchema);
 
 export default CreditUp;
