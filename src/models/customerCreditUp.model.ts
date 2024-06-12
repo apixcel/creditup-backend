@@ -1,33 +1,30 @@
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
-// CreditUp Schema
-const CreditUpSchema = new Schema({
+// Define the schema for individual credit entries
+const CreditEntrySchema = new Schema({
   lender: {
     type: String,
     default: "",
     required: false,
   },
   outstandingBalance: {
-    // type: Number ,
-    type: Schema.Types.Mixed,
+    type: Number,
     default: 0,
     required: false,
   },
   contribute: {
-    // type: Number ,
-    type: Schema.Types.Mixed,
-    default: 0,
-    required: false,
-  },
-  anotherLander: {
-    // type: Number ,
-    type: Schema.Types.Mixed,
+    type: Number,
     default: 0,
     required: false,
   },
 });
 
-const CreditUp = mongoose.model("CreditUpSchema", CreditUpSchema);
+// Define the main schema as an array of the credit entries
+const CreditUpSchema = new Schema({
+  credits: [CreditEntrySchema],
+});
+
+const CreditUp = mongoose.model("CreditUp", CreditUpSchema);
 
 export default CreditUp;

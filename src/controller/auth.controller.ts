@@ -26,37 +26,41 @@ export const checkIsExist = catchAsyncError(async (req, res) => {
 
 export const loginController = catchAsyncError(async (req, res, next) => {
   const { emailOrNumber, password } = req.body;
-  const user = await findUserByEmailOrNumber(emailOrNumber);
-  if (!user) {
-    return sendResponse(res, {
-      data: null,
-      message: "User not found",
-      statusCode: 404,
-      success: false,
+  try {
+    const user = await findUserByEmailOrNumber(emailOrNumber);
+    if (!user) {
+      return sendResponse(res, {
+        data: null,
+        message: "User not found!",
+        statusCode: 404,
+        success: false,
+      });
+    }
+
+    const isPasswordMathced = await bcrypt.compare(password, user.password);
+    if (!isPasswordMathced) {
+      return sendResponse(res, {
+        data: null,
+        message: "Password didn't matched",
+        statusCode: 401,
+        success: false,
+      });
+    }
+
+    const { password: pass, ...restUser } = user.toObject();
+
+    const token = createToken(restUser, "7d");
+
+    res.status(200).json({
+      data: restUser,
+      message: "Successfully loged in",
+      statusCode: 200,
+      success: true,
+      token: token,
     });
+  } catch (error) {
+    console.log(error);
   }
-
-  const isPasswordMathced = await bcrypt.compare(password, user.password);
-  if (!isPasswordMathced) {
-    return sendResponse(res, {
-      data: null,
-      message: "Password didn't matched",
-      statusCode: 401,
-      success: false,
-    });
-  }
-
-  const { password: pass, ...restUser } = user.toObject();
-
-  const token = createToken(restUser, "7d");
-
-  res.status(200).json({
-    data: restUser,
-    message: "Successfully loged in",
-    statusCode: 200,
-    success: true,
-    token: token,
-  });
 });
 export const passwordResetController = catchAsyncError(
   async (req, res, next) => {
