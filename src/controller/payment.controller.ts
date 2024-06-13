@@ -55,20 +55,36 @@ export const confirmPaymentController = async (
   try {
     const result = await User.create([body], { session });
     const customerAddress = await CustomerAddress.create([body], { session });
-    const newCreditUp = new CreditUp(body.creditUp);
-    const creditUP = await newCreditUp.save({ session });
+    // const newCreditUp = new CreditUp(body.creditUp);
+    const creditUP = await CreditUp.create([{ credits: body.creditUp }], {
+      session,
+    });
+
     const customerDetails = await CustomerDetails.create([body], { session });
     const circumstances = await Circumstances.create([body], { session });
+
+    const bodyReplica = { ...body };
+
+    [
+      "customerAddress",
+      "auth",
+      "creditUp",
+      "customerDetail",
+      "circumstances",
+    ].forEach((val) => delete bodyReplica[val]);
 
     const customerObj = {
       customerAddress: customerAddress[0]._id,
       auth: result[0]._id,
-      creditUp: creditUP._id,
+      creditUp: creditUP[0]._id,
       customerDetail: customerDetails[0]._id,
       circumstances: circumstances[0]._id,
+      ...bodyReplica,
     };
 
-    const customer = await Customer.create([{ ...customerObj, ...body }], {
+    console.log(customerObj);
+
+    const customer = await Customer.create([customerObj], {
       session,
     });
     const { password, ...user } = result[0].toObject();

@@ -38,10 +38,10 @@ const CustomerSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
-  // creditUp: {
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   ref: "CreditUp",
-  // },
+  creditUp: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "CreditUp",
+  },
   circumstances: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Circumstance",

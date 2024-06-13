@@ -1,5 +1,4 @@
-import mongoose from "mongoose";
-const Schema = mongoose.Schema;
+import mongoose, { Schema } from "mongoose";
 
 // Define the schema for individual credit entries
 const CreditEntrySchema = new Schema({
@@ -25,6 +24,6 @@ const CreditUpSchema = new Schema({
   credits: [CreditEntrySchema],
 });
 
-const CreditUp = mongoose.model("CreditUp", CreditEntrySchema);
+const CreditUp = mongoose.model("CreditUp", CreditUpSchema);
 
 export default CreditUp;
