@@ -38,12 +38,12 @@ const jwtToken_1 = __importDefault(require("../utils/jwtToken"));
 const sendResponse_1 = __importDefault(require("../utils/sendResponse"));
 const user_1 = require("../utils/user");
 exports.createStripePaymentIntent = (0, catchAsyncError_1.catchAsyncError)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const { amount = 9.99 } = req.body;
+    const { amount = 24.99 } = req.body;
     const payAmount = Number(amount) * 100;
     const paymentIntent = yield app_1.stripe.paymentIntents.create({
         amount: payAmount,
         currency: "gbp",
-        payment_method_types: ["card", "apple_pay", "google_pay"],
+        payment_method_types: ["card"],
     });
     (0, sendResponse_1.default)(res, {
         data: paymentIntent.client_secret,
