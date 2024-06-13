@@ -23,12 +23,7 @@ app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 // Connect to Database
 (0, db_1.default)();
-app.use((0, cors_1.default)({
-    origin: ["https://creditup-nine.vercel.app", "http://localhost:3000"], // Your frontend domain
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
-    allowedHeaders: "Content-Type, Authorization",
-    credentials: true,
-}));
+app.use((0, cors_1.default)());
 // google api
 exports.auth = new googleapis_1.google.auth.GoogleAuth({
     keyFile: "credentials.json",
