@@ -25,13 +25,16 @@ export const checkIsExist = catchAsyncError(async (req, res) => {
 });
 
 export const loginController = catchAsyncError(async (req, res, next) => {
-  const { emailOrNumber, password } = req.body;
+  const { emailOrNumber, password, userType } = req.body;
   try {
-    const user = await findUserByEmailOrNumber(emailOrNumber);
+    const user = await User.findOne({ emailOrNumber, userType }).select(
+      "+password"
+    );
+
     if (!user) {
       return sendResponse(res, {
         data: null,
-        message: "User not found!",
+        message: `No ${userType} found on this emailOrNumber.`,
         statusCode: 404,
         success: false,
       });
