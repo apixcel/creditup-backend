@@ -1,4 +1,4 @@
 node_modules
 .env.dev
-# credentials.json
+credentials.json
 Xcredentials.json
