@@ -16,6 +16,15 @@ const notFound_1 = require("./middlewares/notFound");
 const routes_1 = __importDefault(require("./routes"));
 const app = (0, express_1.default)();
 exports.stripe = new stripe_1.default(process.env.STRIPE_KEY);
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "https://creditup-nine.vercel.app/");
+    res.header("Access-Control-Allow-Methods", "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    if (req.method === "OPTIONS") {
+        return res.status(200).end();
+    }
+    next();
+});
 app.use(express_1.default.static("public"));
 app.use((0, cors_1.default)({ origin: "*" }));
 app.use((0, morgan_1.default)("dev"));

@@ -43,7 +43,7 @@ exports.createStripePaymentIntent = (0, catchAsyncError_1.catchAsyncError)((req,
     const paymentIntent = yield app_1.stripe.paymentIntents.create({
         amount: payAmount,
         currency: "gbp",
-        payment_method_types: ["card", "card_present", "apple_pay", "google_pay"],
+        payment_method_types: ["card"],
     });
     (0, sendResponse_1.default)(res, {
         data: paymentIntent.client_secret,
@@ -53,6 +53,7 @@ exports.createStripePaymentIntent = (0, catchAsyncError_1.catchAsyncError)((req,
 }));
 const confirmPaymentController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const body = req.body;
+    console.log(body);
     const isExist = yield (0, user_1.findUserByEmailOrNumber)(body.emailOrNumber);
     if (isExist) {
         return (0, sendResponse_1.default)(res, {

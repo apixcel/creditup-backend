@@ -21,7 +21,7 @@ export const createStripePaymentIntent = catchAsyncError(
     const paymentIntent = await stripe.paymentIntents.create({
       amount: payAmount,
       currency: "gbp",
-      payment_method_types: ["card", "card_present", "apple_pay", "google_pay"],
+      payment_method_types: ["card"],
     });
 
     sendResponse(res, {
@@ -38,6 +38,7 @@ export const confirmPaymentController = async (
   next: NextFunction
 ) => {
   const body = req.body;
+  console.log(body);
 
   const isExist = await findUserByEmailOrNumber(body.emailOrNumber);
   if (isExist) {
