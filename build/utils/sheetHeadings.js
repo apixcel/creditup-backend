@@ -11,6 +11,7 @@ exports.sheetHeading = [
     "describe",
     "title",
     "dateOfBirth",
+    "email",
     "status",
     "total",
     "paymentDate",
