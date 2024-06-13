@@ -29,9 +29,13 @@ const userSchema = new mongoose_1.default.Schema({
     },
     userType: {
         type: String,
-        enum: ["guest", "customer"],
+        enum: ["agent", "customer"],
         required: true,
-        default: "guest",
+        default: "customer",
+    },
+    isProccesscompleted: {
+        type: Boolean,
+        default: false,
     },
     // add others details of user= ===>
 }, {

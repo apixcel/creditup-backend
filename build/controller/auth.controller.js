@@ -23,62 +23,65 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.passwordResetController = exports.loginController = exports.registerController = void 0;
+exports.passwordResetController = exports.loginController = exports.checkIsExist = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const userModel_1 = require("../models/userModel");
 const catchAsyncError_1 = require("../utils/catchAsyncError");
 const jwtToken_1 = __importDefault(require("../utils/jwtToken"));
 const sendResponse_1 = __importDefault(require("../utils/sendResponse"));
 const user_1 = require("../utils/user");
-exports.registerController = (0, catchAsyncError_1.catchAsyncError)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const { body } = req;
-    const isExist = yield (0, user_1.findUserByEmailOrNumber)(body.emailOrNumber);
+exports.checkIsExist = (0, catchAsyncError_1.catchAsyncError)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { emailOrNumber } = req.body;
+    const isExist = yield (0, user_1.findUserByEmailOrNumber)(emailOrNumber);
     if (isExist) {
-        return (0, sendResponse_1.default)(res, {
-            data: null,
-            message: "User already exist in this email or number",
-            statusCode: 400,
+        return res.json({
             success: false,
+            message: "User already exist in this email or number",
+            data: null,
+            duplicate: true,
         });
     }
-    const result = yield userModel_1.User.create(body);
-    const _a = result.toObject(), { password } = _a, user = __rest(_a, ["password"]);
-    (0, sendResponse_1.default)(res, {
-        data: user,
-        message: "User creaeted successfully",
-        statusCode: 200,
+    res.json({
         success: true,
+        message: "ok :)",
+        data: null,
+        duplicate: false,
     });
 }));
 exports.loginController = (0, catchAsyncError_1.catchAsyncError)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const { emailOrNumber, password } = req.body;
-    const user = yield (0, user_1.findUserByEmailOrNumber)(emailOrNumber);
-    if (!user) {
-        return (0, sendResponse_1.default)(res, {
-            data: null,
-            message: "User not found",
-            statusCode: 404,
-            success: false,
+    const { emailOrNumber, password, userType } = req.body;
+    try {
+        const user = yield userModel_1.User.findOne({ emailOrNumber, userType }).select("+password");
+        if (!user) {
+            return (0, sendResponse_1.default)(res, {
+                data: null,
+                message: `No ${userType} found on this emailOrNumber.`,
+                statusCode: 404,
+                success: false,
+            });
+        }
+        const isPasswordMathced = yield bcrypt_1.default.compare(password, user.password);
+        if (!isPasswordMathced) {
+            return (0, sendResponse_1.default)(res, {
+                data: null,
+                message: "Password didn't matched",
+                statusCode: 401,
+                success: false,
+            });
+        }
+        const _a = user.toObject(), { password: pass } = _a, restUser = __rest(_a, ["password"]);
+        const token = (0, jwtToken_1.default)(restUser, "7d");
+        res.status(200).json({
+            data: restUser,
+            message: "Successfully loged in",
+            statusCode: 200,
+            success: true,
+            token: token,
         });
     }
-    const isPasswordMathced = yield bcrypt_1.default.compare(password, user.password);
-    if (!isPasswordMathced) {
-        return (0, sendResponse_1.default)(res, {
-            data: null,
-            message: "Password didn't matched",
-            statusCode: 401,
-            success: false,
-        });
+    catch (error) {
+        console.log(error);
     }
-    const _b = user.toObject(), { password: pass } = _b, restUser = __rest(_b, ["password"]);
-    const token = (0, jwtToken_1.default)(restUser, "7d");
-    (0, sendResponse_1.default)(res, {
-        data: restUser,
-        message: "Successfully loged in",
-        statusCode: 200,
-        success: true,
-        token: token,
-    });
 }));
 exports.passwordResetController = (0, catchAsyncError_1.catchAsyncError)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { emailOrNumber, newPassword, oldPassword } = req.body;
@@ -91,7 +94,6 @@ exports.passwordResetController = (0, catchAsyncError_1.catchAsyncError)((req, r
             success: false,
         });
     }
-    console.log(user.password);
     const isPasswordMathced = yield bcrypt_1.default.compare(oldPassword, user.password);
     if (!isPasswordMathced) {
         return (0, sendResponse_1.default)(res, {

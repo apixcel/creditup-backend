@@ -13,7 +13,7 @@ exports.userValidationSchema = zod_1.z.object({
         .regex(/[a-z]/, {
         message: "Password must contain at least one lowercase letter",
     }),
-    userType: zod_1.z.enum(["guest", "customer"]).optional().default("guest"),
+    userType: zod_1.z.enum(["agent", "customer"]).optional().default("customer"),
 });
 exports.userPasswordValidatoinResetSchema = zod_1.z.object({
     emailOrNumber: zod_1.z.string({ message: "emailOrNumber is required string" }),

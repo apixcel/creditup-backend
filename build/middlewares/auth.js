@@ -20,32 +20,19 @@ const isAuthenticatedUser = (req, res, next) => __awaiter(void 0, void 0, void 0
     try {
         const getToken = req.header("Authorization");
         if (!getToken)
-            return res
-                .status(400)
-                .json({ success: false, message: "Invalid Authentication." });
-        // const token = getToken.split(" ")[1];
+            return res.status(400).json({ msg: "Invalid Authentication." });
         const token = getToken.split(" ")[1];
-        if (!token) {
-            return res.status(204).send({
-                message: "No token",
-                success: false,
-            });
-        }
         const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
         if (!decoded)
-            return res
-                .status(401)
-                .json({ success: false, message: "Invalid Authentication." });
-        const user = yield userModel_1.User
-            .findOne({ _id: (_a = decoded === null || decoded === void 0 ? void 0 : decoded.user) === null || _a === void 0 ? void 0 : _a._id })
-            .select("-password");
+            return res.status(400).json({ msg: "Invalid Authentication." });
+        const user = yield userModel_1.User.findById((_a = decoded === null || decoded === void 0 ? void 0 : decoded.user) === null || _a === void 0 ? void 0 : _a._id);
         if (!user)
-            return res.status(400).json({ message: "User does not exist." });
+            return res.status(400).json({ msg: "User does not exist." });
         req.user = user;
         next();
     }
     catch (err) {
-        return res.status(500).json({ message: err.message });
+        return res.status(500).json({ msg: err.message });
     }
 });
 exports.isAuthenticatedUser = isAuthenticatedUser;

@@ -8,12 +8,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.bcryptSalRound = exports.findUserByEmailOrNumber = void 0;
+exports.bcryptSalRound = exports.findCustomerByEmailOrNumber = exports.findUserByEmailOrNumber = void 0;
+const customer_model_1 = __importDefault(require("../models/customer.model"));
 const userModel_1 = require("../models/userModel");
 const findUserByEmailOrNumber = (emailOrNumber) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield userModel_1.User.findOne({ emailOrNumber }).select("+password");
     return result;
 });
 exports.findUserByEmailOrNumber = findUserByEmailOrNumber;
+const findCustomerByEmailOrNumber = (emailOrNumber) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield customer_model_1.default.findOne({ emailOrNumber });
+    return result;
+});
+exports.findCustomerByEmailOrNumber = findCustomerByEmailOrNumber;
 exports.bcryptSalRound = 10;
