@@ -16,12 +16,6 @@ const notFound_1 = require("./middlewares/notFound");
 const routes_1 = __importDefault(require("./routes"));
 const app = (0, express_1.default)();
 exports.stripe = new stripe_1.default(process.env.STRIPE_KEY);
-app.use((0, cors_1.default)({
-    origin: "https://creditup-nine.vercel.app/", // Your frontend domain
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
-    allowedHeaders: "Content-Type, Authorization",
-    credentials: true,
-}));
 app.use(express_1.default.static("public"));
 // app.use(cors({ origin: ["https://creditup-nine.vercel.app", "http://localhost:3000"] }));
 app.use((0, morgan_1.default)("dev"));
@@ -29,6 +23,12 @@ app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 // Connect to Database
 (0, db_1.default)();
+app.use((0, cors_1.default)({
+    origin: "https://creditup-nine.vercel.app/", // Your frontend domain
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
+    allowedHeaders: "Content-Type, Authorization",
+    credentials: true,
+}));
 // google api
 exports.auth = new googleapis_1.google.auth.GoogleAuth({
     keyFile: "credentials.json",
