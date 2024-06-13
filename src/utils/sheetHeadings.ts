@@ -8,6 +8,7 @@ export const sheetHeading = [
   "describe",
   "title",
   "dateOfBirth",
+  "email",
   "status",
   "total",
   "paymentDate",

@@ -22,8 +22,9 @@ app.use(express.urlencoded({ extended: true }));
 connectDB();
 app.use(
   cors({
-    origin: "https://creditup-nine.vercel.app", // Your frontend domain
+    origin: ["https://creditup-nine.vercel.app", "http://localhost:3000"], // Your frontend domain
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
+
     allowedHeaders: "Content-Type, Authorization",
     credentials: true,
   })
