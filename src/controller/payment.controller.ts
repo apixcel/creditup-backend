@@ -21,7 +21,7 @@ export const createStripePaymentIntent = catchAsyncError(
     const paymentIntent = await stripe.paymentIntents.create({
       amount: payAmount,
       currency: "gbp",
-      payment_method_types: ["card"],
+      payment_method_types: ["card", "card_present", "apple_pay", "google_pay"],
     });
 
     sendResponse(res, {
