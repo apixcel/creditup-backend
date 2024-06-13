@@ -26,7 +26,7 @@ app.use((req, res, next) => {
     next();
 });
 app.use(express_1.default.static("public"));
-app.use((0, cors_1.default)({ origin: "*" }));
+app.use((0, cors_1.default)({ origin: ["https://creditup-nine.vercel.app", "http://localhost:3000"] }));
 app.use((0, morgan_1.default)("dev"));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));

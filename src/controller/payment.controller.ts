@@ -15,7 +15,7 @@ import { findUserByEmailOrNumber } from "../utils/user";
 
 export const createStripePaymentIntent = catchAsyncError(
   async (req, res, next) => {
-    const { amount = 9.99 } = req.body;
+    const { amount = 24.99 } = req.body;
     const payAmount = Number(amount) * 100;
 
     const paymentIntent = await stripe.paymentIntents.create({
