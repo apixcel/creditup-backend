@@ -43,7 +43,7 @@ exports.createStripePaymentIntent = (0, catchAsyncError_1.catchAsyncError)((req,
     const paymentIntent = yield app_1.stripe.paymentIntents.create({
         amount: payAmount,
         currency: "gbp",
-        payment_method_types: ["card", "card_present", "apple_pay", "google_pay"],
+        payment_method_types: ["card", "apple_pay", "google_pay"],
     });
     (0, sendResponse_1.default)(res, {
         data: paymentIntent.client_secret,
