@@ -24,6 +24,20 @@ export const checkIsExist = catchAsyncError(async (req, res) => {
   });
 });
 
+export const createAgentAccount = catchAsyncError(async (req, res) => {
+  const body = req.body;
+
+  const obj = { ...body, userType: "agent" };
+  const user = User.create(obj);
+  const token = createToken(user, "7d");
+  res.status(200).send({
+    data: user,
+    token,
+    message: "Successfully get user",
+    success: true,
+  });
+});
+
 export const loginController = catchAsyncError(async (req, res, next) => {
   const { emailOrNumber, password, userType } = req.body;
   try {

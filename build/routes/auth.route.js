@@ -7,6 +7,7 @@ const validShema_1 = require("../middlewares/validShema");
 const userVlidationSchema_1 = require("../validation/userVlidationSchema");
 const router = (0, express_1.Router)();
 router.post("/isexist", auth_controller_1.checkIsExist);
+router.post("/create/agent", auth_controller_1.createAgentAccount);
 router.post("/login", (0, validShema_1.validSchema)(userVlidationSchema_1.userValidationSchema), auth_controller_1.loginController);
 router.post("/reset-password", (0, validShema_1.validSchema)(userVlidationSchema_1.userPasswordValidatoinResetSchema), auth_controller_1.passwordResetController);
 exports.authRoutes = router;

@@ -23,7 +23,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.passwordResetController = exports.loginController = exports.checkIsExist = void 0;
+exports.passwordResetController = exports.loginController = exports.createAgentAccount = exports.checkIsExist = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const userModel_1 = require("../models/userModel");
 const catchAsyncError_1 = require("../utils/catchAsyncError");
@@ -46,6 +46,18 @@ exports.checkIsExist = (0, catchAsyncError_1.catchAsyncError)((req, res) => __aw
         message: "ok :)",
         data: null,
         duplicate: false,
+    });
+}));
+exports.createAgentAccount = (0, catchAsyncError_1.catchAsyncError)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const body = req.body;
+    const obj = Object.assign(Object.assign({}, body), { userType: "agent" });
+    const user = userModel_1.User.create(obj);
+    const token = (0, jwtToken_1.default)(user, "7d");
+    res.status(200).send({
+        data: user,
+        token,
+        message: "Successfully get user",
+        success: true,
     });
 }));
 exports.loginController = (0, catchAsyncError_1.catchAsyncError)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
