@@ -23,7 +23,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.confirmPaymentController = exports.createStripePaymentIntent = void 0;
+exports.confirmPaymentController = exports.createStripePaymentIntent = exports.createSubscriptionSession = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const app_1 = require("../app");
 const circumstance_model_1 = __importDefault(require("../models/circumstance.model"));
@@ -37,6 +37,36 @@ const catchAsyncError_1 = require("../utils/catchAsyncError");
 const jwtToken_1 = __importDefault(require("../utils/jwtToken"));
 const sendResponse_1 = __importDefault(require("../utils/sendResponse"));
 const user_1 = require("../utils/user");
+exports.createSubscriptionSession = (0, catchAsyncError_1.catchAsyncError)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email, paymentMethodId } = req.body;
+    const planId = process.env.PRICING_BASIC;
+    try {
+        // Create customer
+        const customer = yield app_1.stripe.customers.create({
+            email,
+            payment_method: paymentMethodId,
+            invoice_settings: {
+                default_payment_method: paymentMethodId,
+            },
+        });
+        // Create subscription
+        const subscription = yield app_1.stripe.subscriptions.create({
+            customer: customer.id,
+            items: [{ plan: planId }],
+            expand: ["latest_invoice.payment_intent"],
+        });
+        res.send({
+            success: true,
+            data: subscription,
+            message: "Successfully create subscription session",
+        });
+    }
+    catch (error) {
+        res
+            .status(400)
+            .send({ success: false, message: error.message, data: null });
+    }
+}));
 exports.createStripePaymentIntent = (0, catchAsyncError_1.catchAsyncError)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { amount = 24.99 } = req.body;
     const payAmount = Number(amount) * 100;
@@ -53,7 +83,6 @@ exports.createStripePaymentIntent = (0, catchAsyncError_1.catchAsyncError)((req,
 }));
 const confirmPaymentController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const body = req.body;
-    console.log(body);
     const isExist = yield (0, user_1.findUserByEmailOrNumber)(body.emailOrNumber);
     if (isExist) {
         return (0, sendResponse_1.default)(res, {
@@ -83,7 +112,6 @@ const confirmPaymentController = (req, res, next) => __awaiter(void 0, void 0, v
             "circumstances",
         ].forEach((val) => delete bodyReplica[val]);
         const customerObj = Object.assign({ customerAddress: customerAddress[0]._id, auth: result[0]._id, creditUp: creditUP[0]._id, customerDetail: customerDetails[0]._id, circumstances: circumstances[0]._id }, bodyReplica);
-        console.log(customerObj);
         const customer = yield customer_model_1.default.create([customerObj], {
             session,
         });
@@ -109,7 +137,7 @@ const confirmPaymentController = (req, res, next) => __awaiter(void 0, void 0, v
             sheetArr.contribute = `${sheetArr.contribute || ""}, ${data.contribute}`;
         });
         // add data in sheet
-        (0, googApi_service_1.appendDataInSheetController)(sheetArr);
+        yield (0, googApi_service_1.appendDataInSheetController)(sheetArr);
         yield session.commitTransaction();
         session.endSession();
         res.status(200).json({

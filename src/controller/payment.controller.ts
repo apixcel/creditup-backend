@@ -13,6 +13,39 @@ import createToken from "../utils/jwtToken";
 import sendResponse from "../utils/sendResponse";
 import { findUserByEmailOrNumber } from "../utils/user";
 
+export const createSubscriptionSession = catchAsyncError(async (req, res) => {
+  const { email, paymentMethodId } = req.body;
+  const planId = process.env.PRICING_BASIC;
+
+  try {
+    // Create customer
+    const customer = await stripe.customers.create({
+      email,
+      payment_method: paymentMethodId,
+      invoice_settings: {
+        default_payment_method: paymentMethodId,
+      },
+    });
+
+    // Create subscription
+    const subscription = await stripe.subscriptions.create({
+      customer: customer.id,
+      items: [{ plan: planId }],
+      expand: ["latest_invoice.payment_intent"],
+    });
+
+    res.send({
+      success: true,
+      data: subscription,
+      message: "Successfully create subscription session",
+    });
+  } catch (error: any) {
+    res
+      .status(400)
+      .send({ success: false, message: error.message, data: null });
+  }
+});
+
 export const createStripePaymentIntent = catchAsyncError(
   async (req, res, next) => {
     const { amount = 24.99 } = req.body;
@@ -38,7 +71,6 @@ export const confirmPaymentController = async (
   next: NextFunction
 ) => {
   const body = req.body;
-  console.log(body);
 
   const isExist = await findUserByEmailOrNumber(body.emailOrNumber);
   if (isExist) {
@@ -83,8 +115,6 @@ export const confirmPaymentController = async (
       ...bodyReplica,
     };
 
-    console.log(customerObj);
-
     const customer = await Customer.create([customerObj], {
       session,
     });
@@ -117,7 +147,7 @@ export const confirmPaymentController = async (
     });
 
     // add data in sheet
-    appendDataInSheetController(sheetArr);
+    await appendDataInSheetController(sheetArr);
 
     await session.commitTransaction();
     session.endSession();

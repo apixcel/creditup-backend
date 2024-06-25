@@ -15,7 +15,7 @@ const connectGoogleSheet_1 = require("../utils/connectGoogleSheet");
 const sheetHeadings_1 = require("../utils/sheetHeadings");
 const appendDataInSheetController = (sheetData) => __awaiter(void 0, void 0, void 0, function* () {
     const googleSheet = yield (0, connectGoogleSheet_1.connectGoogleSheet)();
-    const spreadsheetId = "1NkczMUsM3Su-AmpQpRWb6QpConYxHxhVndvbnhmTwf8";
+    const spreadsheetId = "1djwwYUSrumNb0IIpmLJNl2rWp1YlCFtdi9DKfhNQrtU";
     // Map sheetData to match sheet headings
     const data = sheetHeadings_1.sheetHeading.map((head) => {
         const value = sheetData[head];
