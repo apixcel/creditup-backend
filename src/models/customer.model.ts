@@ -2,7 +2,11 @@ import mongoose, { Schema } from "mongoose";
 
 // Customer Schema
 const CustomerSchema = new Schema({
-  emailOrNumber: {
+  email: {
+    type: String,
+    required: true,
+  },
+  phone: {
     type: String,
     required: true,
   },
@@ -11,11 +15,7 @@ const CustomerSchema = new Schema({
     required: false,
     default: "",
   },
-  phone: {
-    type: String,
-    required: false,
-    default: "",
-  },
+
   address: {
     type: String,
     required: false,

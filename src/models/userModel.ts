@@ -4,10 +4,13 @@ import { bcryptSalRound } from "../utils/user";
 
 const userSchema = new mongoose.Schema(
   {
-    emailOrNumber: {
+    email: {
       type: String,
       required: true,
-
+    },
+    phone: {
+      type: String,
+      required: true,
     },
     password: {
       type: String,

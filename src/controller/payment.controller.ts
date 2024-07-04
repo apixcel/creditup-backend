@@ -71,8 +71,9 @@ export const confirmPaymentController = async (
   next: NextFunction
 ) => {
   const body = req.body;
+  console.log(body);
 
-  const isExist = await findUserByEmailOrNumber(body.emailOrNumber);
+  const isExist = await findUserByEmailOrNumber(body.email);
   if (isExist) {
     return sendResponse(res, {
       data: null,

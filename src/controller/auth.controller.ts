@@ -41,9 +41,10 @@ export const createAgentAccount = catchAsyncError(async (req, res) => {
 export const loginController = catchAsyncError(async (req, res, next) => {
   const { emailOrNumber, password, userType } = req.body;
   try {
-    const user = await User.findOne({ emailOrNumber, userType }).select(
-      "+password"
-    );
+    const user = await User.findOne({
+      $or: [{ email: emailOrNumber }, { phone: emailOrNumber }],
+      userType,
+    }).select("+password");
 
     if (!user) {
       return sendResponse(res, {
