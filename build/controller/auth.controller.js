@@ -63,7 +63,10 @@ exports.createAgentAccount = (0, catchAsyncError_1.catchAsyncError)((req, res) =
 exports.loginController = (0, catchAsyncError_1.catchAsyncError)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { emailOrNumber, password, userType } = req.body;
     try {
-        const user = yield userModel_1.User.findOne({ emailOrNumber, userType }).select("+password");
+        const user = yield userModel_1.User.findOne({
+            $or: [{ email: emailOrNumber }, { phone: emailOrNumber }],
+            userType,
+        }).select("+password");
         if (!user) {
             return (0, sendResponse_1.default)(res, {
                 data: null,

@@ -26,16 +26,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
 // Customer Schema
 const CustomerSchema = new mongoose_1.Schema({
-    emailOrNumber: {
+    email: {
+        type: String,
+        required: true,
+    },
+    phone: {
         type: String,
         required: true,
     },
     customerName: {
-        type: String,
-        required: false,
-        default: "",
-    },
-    phone: {
         type: String,
         required: false,
         default: "",

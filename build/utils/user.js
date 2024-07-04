@@ -16,12 +16,16 @@ exports.bcryptSalRound = exports.findCustomerByEmailOrNumber = exports.findUserB
 const customer_model_1 = __importDefault(require("../models/customer.model"));
 const userModel_1 = require("../models/userModel");
 const findUserByEmailOrNumber = (emailOrNumber) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield userModel_1.User.findOne({ emailOrNumber }).select("+password");
+    const result = yield userModel_1.User.findOne({
+        $or: [{ email: emailOrNumber }, { phone: emailOrNumber }],
+    }).select("+password");
     return result;
 });
 exports.findUserByEmailOrNumber = findUserByEmailOrNumber;
 const findCustomerByEmailOrNumber = (emailOrNumber) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield customer_model_1.default.findOne({ emailOrNumber });
+    const result = yield customer_model_1.default.findOne({
+        $or: [{ email: emailOrNumber }, { phone: emailOrNumber }],
+    });
     return result;
 });
 exports.findCustomerByEmailOrNumber = findCustomerByEmailOrNumber;

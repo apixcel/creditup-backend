@@ -2,16 +2,15 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sheetHeading = void 0;
 exports.sheetHeading = [
-    "emailOrNumber",
     "userType",
-    "customerName",
-    "phone",
-    "address",
+    "firstName",
+    "lastName",
     "postCode",
     "describe",
     "title",
     "dateOfBirth",
     "email",
+    "phone",
     "status",
     "total",
     "paymentDate",

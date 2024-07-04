@@ -17,7 +17,11 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const user_1 = require("../utils/user");
 const userSchema = new mongoose_1.default.Schema({
-    emailOrNumber: {
+    email: {
+        type: String,
+        required: true,
+    },
+    phone: {
         type: String,
         required: true,
     },

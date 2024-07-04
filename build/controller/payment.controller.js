@@ -83,7 +83,8 @@ exports.createStripePaymentIntent = (0, catchAsyncError_1.catchAsyncError)((req,
 }));
 const confirmPaymentController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const body = req.body;
-    const isExist = yield (0, user_1.findUserByEmailOrNumber)(body.emailOrNumber);
+    console.log(body);
+    const isExist = yield (0, user_1.findUserByEmailOrNumber)(body.email);
     if (isExist) {
         return (0, sendResponse_1.default)(res, {
             data: null,
