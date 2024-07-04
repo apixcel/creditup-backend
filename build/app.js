@@ -32,7 +32,7 @@ exports.auth = new googleapis_1.google.auth.GoogleAuth({
 // Define API routes
 app.use("/api/v1", routes_1.default);
 app.get("/", (_, res) => {
-    res.send("hello server");
+    res.send("hello server 2.0");
 });
 const server = http_1.default.createServer(app);
 const port = process.env.PORT || 5000;

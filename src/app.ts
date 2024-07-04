@@ -30,7 +30,7 @@ export const auth = new google.auth.GoogleAuth({
 // Define API routes
 app.use("/api/v1", routes);
 app.get("/", (_, res) => {
-  res.send("hello server");
+  res.send("hello server 2.0");
 });
 const server = http.createServer(app);
 
