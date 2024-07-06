@@ -55,6 +55,13 @@ exports.createSubscriptionSession = (0, catchAsyncError_1.catchAsyncError)((req,
             items: [{ plan: planId }],
             expand: ["latest_invoice.payment_intent"],
         });
+        if (subscription.status !== "active") {
+            return res.json({
+                success: false,
+                message: "Incomplete status",
+                data: null,
+            });
+        }
         res.send({
             success: true,
             data: subscription,
@@ -82,6 +89,7 @@ exports.createStripePaymentIntent = (0, catchAsyncError_1.catchAsyncError)((req,
     });
 }));
 const confirmPaymentController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     const body = req.body;
     console.log(body);
     const isExist = yield (0, user_1.findUserByEmailOrNumber)(body.email);
@@ -116,27 +124,25 @@ const confirmPaymentController = (req, res, next) => __awaiter(void 0, void 0, v
         const customer = yield customer_model_1.default.create([customerObj], {
             session,
         });
-        const _a = result[0].toObject(), { password } = _a, user = __rest(_a, ["password"]);
+        const _b = result[0].toObject(), { password } = _b, user = __rest(_b, ["password"]);
         const token = (0, jwtToken_1.default)(user, "7d");
-        const _b = req.body, { creditUp } = _b, rest = __rest(_b, ["creditUp"]);
+        const _c = req.body, { creditUp } = _c, rest = __rest(_c, ["creditUp"]);
         const sheetArr = Object.assign({}, rest);
-        // [
-        //   {
-        //     "lender": "Bank of Example",
-        //     "outstandingBalance": 15000.50,
-        //     "contribute": 300.75
-        //   },
-        //   {
-        //     "lender": "Example Credit Union",
-        //     "outstandingBalance": 8200.00,
-        //     "contribute": 150.00
-        //   }
-        // ]
-        creditUp.forEach((data) => {
-            sheetArr.lender = `${sheetArr.lender || ""}, ${data.lender}`;
-            sheetArr.outstandingBalance = `${sheetArr.outstandingBalance || ""}, ${data.outstandingBalance}`;
-            sheetArr.contribute = `${sheetArr.contribute || ""}, ${data.contribute}`;
+        creditUp.forEach((data, i) => {
+            sheetArr.lender =
+                i === 0
+                    ? `${sheetArr.lender || ""} ${data.lender}`
+                    : `${sheetArr.lender || ""}, ${data.lender}`;
+            sheetArr.outstandingBalance =
+                i === 0
+                    ? `${sheetArr.outstandingBalance || ""} ${data.outstandingBalance}`
+                    : `${sheetArr.outstandingBalance || ""}, ${data.outstandingBalance}`;
+            sheetArr.contribute =
+                i === 0
+                    ? `${sheetArr.contribute || ""} ${data.contribute}`
+                    : `${sheetArr.contribute || ""}, ${data.contribute}`;
         });
+        sheetArr.total = ((_a = body.creditUp) === null || _a === void 0 ? void 0 : _a.length) || 0;
         // add data in sheet
         yield (0, googApi_service_1.appendDataInSheetController)(sheetArr);
         yield session.commitTransaction();

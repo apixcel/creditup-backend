@@ -95,7 +95,7 @@ exports.loginController = (0, catchAsyncError_1.catchAsyncError)((req, res, next
         });
     }
     catch (error) {
-        console.log(error);
+        next(error);
     }
 }));
 exports.passwordResetController = (0, catchAsyncError_1.catchAsyncError)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {

@@ -5,7 +5,6 @@ exports.sheetHeading = [
     "userType",
     "firstName",
     "lastName",
-    "postCode",
     "describe",
     "title",
     "dateOfBirth",
@@ -19,7 +18,7 @@ exports.sheetHeading = [
     "buildingName",
     "streetName",
     "city",
-    "country",
+    "country", // now working as post code
     "lender",
     "outstandingBalance",
     "contribute",
