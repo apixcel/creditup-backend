@@ -96,7 +96,6 @@ export const confirmPaymentController = async (
 
   try {
     const result = await User.create([body], { session });
-
     const customerAddress = await CustomerAddress.create([body], { session });
     // const newCreditUp = new CreditUp(body.creditUp);
     const creditUP = await CreditUp.create([{ credits: body.creditUp }], {
