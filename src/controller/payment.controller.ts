@@ -12,10 +12,21 @@ import { catchAsyncError } from "../utils/catchAsyncError";
 import createToken from "../utils/jwtToken";
 import sendResponse from "../utils/sendResponse";
 import { findUserByEmailOrNumber } from "../utils/user";
+const calculateBillingCycleAnchor = (desiredDate: string) => {
+  const today = new Date();
+  const nextBillingDate = new Date(desiredDate);
+
+  if (nextBillingDate <= today) {
+    nextBillingDate.setMonth(nextBillingDate.getMonth() + 1);
+  }
+
+  return Math.floor(nextBillingDate.getTime() / 1000); // Convert to Unix timestamp
+};
 
 export const createSubscriptionSession = catchAsyncError(async (req, res) => {
-  const { email, paymentMethodId } = req.body;
+  const { email, paymentMethodId, date } = req.body;
   const planId = process.env.PRICING_BASIC;
+  console.log(planId);
 
   try {
     // Create customer
@@ -28,10 +39,14 @@ export const createSubscriptionSession = catchAsyncError(async (req, res) => {
     });
 
     // Create subscription
+    const billingCycle = calculateBillingCycleAnchor(date);
     const subscription = await stripe.subscriptions.create({
       customer: customer.id,
       items: [{ plan: planId }],
       expand: ["latest_invoice.payment_intent"],
+      billing_cycle_anchor: billingCycle,
+      proration_behavior: "none",
+      // trial_end: billingCycle - 1,
     });
 
     if (subscription.status !== "active") {
