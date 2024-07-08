@@ -183,11 +183,12 @@ export const confirmPaymentController = async (
   } catch (error) {
     await session.abortTransaction();
     session.endSession();
-    console.error(error);
+    console.log(error);
     next(error);
     sendResponse(res, {
       data: null,
       message: "Failed to create user",
+    
       statusCode: 500,
       success: false,
     });
